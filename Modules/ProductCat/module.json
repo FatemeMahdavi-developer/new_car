@@ -1,0 +1,11 @@
+{
+    "name": "ProductCat",
+    "alias": "productcat",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ProductCat\\Providers\\ProductCatServiceProvider"
+    ],
+    "files": []
+}

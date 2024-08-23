@@ -22,8 +22,16 @@
 </select>
 
 @section('footer')
+@if(!empty($value))
+    <script>
+       $("#"+"{{$id}}").val("{{$value}}").on('change', function (e) {
+            var data = $("#"+"{{$id}}").select2("val");
+            @this.set("{{$name}}", data);
+        });
+    </script>
+@else
 <script>
-   $(document).ready(function () {
+    document.addEventListener('livewire:navigated', function() {
         $("#"+"{{$id}}").select2();
         $("#"+"{{$id}}").on('change', function (e) {
             var data = $("#"+"{{$id}}").select2("val");
@@ -31,4 +39,5 @@
         });
     });
 </script>
+@endif
 @endsection

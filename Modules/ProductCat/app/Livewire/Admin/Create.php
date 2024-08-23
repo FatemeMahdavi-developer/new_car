@@ -45,10 +45,12 @@ class Create extends Component
         $this->path_pic=$this->pic;
     }
 
-    public function updatedParent_id($value)
+    public function updating($property, $value)
     {
+        if($property=="parent_id"){
+            $this->parent_id = $value;
+        }
         // Handle the value change
-        $this->parent_id = $value;
     }
 
     public function save(){

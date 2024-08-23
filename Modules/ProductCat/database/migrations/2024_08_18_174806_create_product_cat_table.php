@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_cats', function (Blueprint $table) {
             $table->id();
-            $table->string('seo_url');
+            $table->string('seo_url')->unique();
             $table->string('seo_title');
             $table->string('title');
             $table->unsignedBigInteger('parent_id')->nullable()->default(0);

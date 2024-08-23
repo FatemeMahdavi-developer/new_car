@@ -28,20 +28,20 @@
                         </tr>
                             @foreach ($product_cats as $product_cat)
                             <tr style="text-align: center" wire:sortable.item="{{ $product_cat->id }}" wire:key="task-{{ $product_cat->id }}">
-                                <td><input type="checkbox" id="checkbox_item" value="{{$product_cat->id}}"  wire:model="items" ></td>
+                                <td><input type="checkbox" id="checkbox_item" value="{{$product_cat->id}}" name="items[]"  wire:model="items" ></td>
                                 <td>{{$loop->index+1}}</td>
                                 <td wire:sortable.handle>{{$product_cat->title}}</td>
                                 <td>{{$product_cat->order}}</td>
                                 <td>{{$product_cat->DateConvert()}}</td>
                                 <td>
                                     <div class="pretty p-switch">
-                                        <input type="checkbox" @if($product_cat->state) checked @endif  wire:click="change_state({{$product_cat->id}})" ><div class="state p-success"><label></label></div>
+                                        <input type="checkbox" @if($product_cat->state) checked @endif  wire:click="change_state({{$product_cat->id}})" wire:model="item_test"><div class="state p-success"><label></label></div>
                                     </div>
                                 </td>
                                 <td>
                                     <a wire:navigate href="{{route("admin.productcat.edit",['productcat'=>$product_cat['id']])}}" class="btn btn-success btn-sm"><i class="fas fa-edit"></i></a>
                                     <button type="submit" wire:click="delete({{$product_cat->id}})" class="btn btn-danger btn-sm delete"><i class="fas fa-trash"></i></button>
-                                    <a wire:navigate href="?catid={{$product_cat['id']}}" class="btn btn-primary btn-sm">زیر بخش :<span class="badge badge-transparent">{{$product_cat->sub_cats()->count()}}</span></a>
+                                    <a wire:navigate href="?parent_id={{$product_cat['id']}}" class="btn btn-primary btn-sm">زیر بخش :<span class="badge badge-transparent">{{$product_cat->sub_cats()->count()}}</span></a>
 
                                 </td>
                             </tr>
@@ -52,12 +52,13 @@
                     <div class="alert alert-danger">نتیجه ای یافت نشد</div>
                     @endif
                     {{$product_cats->links()}}
+                    <button class="btn btn-primary" wire:click="delete_all">حذف کلی</button>
                 </div>
             </div>
             <div class="tab-pane fade" id="tab2" role="tabpanel">
                 <div class="form-group w-50">
                     <label for="title">نام</label>
-                    <input type="text" name="title" id="title" class="form-control">
+                    <input type="text" wire:model="name" class="form-control">
                 </div>
                 <div class="form-group w-50">
                     <button type="submit" class="btn btn-primary mr-1">جستجو</button>

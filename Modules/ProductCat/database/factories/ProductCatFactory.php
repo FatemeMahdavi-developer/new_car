@@ -17,11 +17,12 @@ class ProductCatFactory extends Factory
      */
     public function definition(): array
     {
+        $name=$this->faker->unique()->firstName();
         return [
-            'title'=>$this->faker->title,
-            'seo_url'=>str_replace('','-',$this->faker->unique()->title),
-            'seo_title'=>$this->faker->title,
-            'parent_id'=>ProductCat::get()->random() ?? null
+            'title'=>$name,
+            'seo_url'=>str_replace('','-',$name),
+            'seo_title'=>$name,
+            'parent_id'=> ProductCat::get()->random() ?? null
         ];
     }
 }

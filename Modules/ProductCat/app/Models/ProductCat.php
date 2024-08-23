@@ -6,11 +6,12 @@ use App\Trait\DateConvert;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\ProductCat\Database\Factories\ProductCatFactory;
 
 class ProductCat extends Model
 {
-    use HasFactory,DateConvert;
+    use HasFactory,DateConvert,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,9 +22,23 @@ class ProductCat extends Model
         'seo_url',
         'pic',
         'parent_id',
-        'state'
+        'state',
     ];
+    public static function boot(){
 
+        parent::boot();
+        //soft Delete   
+        static::deleted(function($product_cat)
+        {
+            dd("r4r5tyuiop[");
+            $product_cat->sub_cats()->each(function($sub_product_cat) {
+                dd($sub_product_cat);
+                $sub_product_cat->update(["parent_id"=>null]);
+            });
+
+        });
+
+    }
     protected static function newFactory(): ProductCatFactory
     {
         return ProductCatFactory::new();
@@ -34,11 +49,11 @@ class ProductCat extends Model
     }
 
 
-    public  function ScopFilter(Builder $builder,$params){
-        if(!empty($params['catid'])){
-            $builder->where("catid",$params["catid"]);
+    public  function scopeFilter(Builder $builder,$params){
+        if(!empty($params['parent_id'])){
+            $builder->where("parent_id",$params["parent_id"]);
         }else{
-            $builder->where("catid",'0');
+            $builder->where("parent_id",null);
         }
         if(!empty($params['title'])){
             $builder->where('title', 'like', '%' . $params["title"] . '%');

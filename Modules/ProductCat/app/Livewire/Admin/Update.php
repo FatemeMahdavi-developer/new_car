@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Modules\ProductCat\Models\ProductCat;
-
+use Livewire\Attributes\On;
 class Update extends Component
 {
     use WithFileUploads;
@@ -55,11 +55,6 @@ class Update extends Component
         return $attribute;
     }
 
-    public function updatedParent_id($value)
-    {
-        $this->parent_id = $value;
-    }
-
     public function update(){
         $inputs=$this->validate();
         if(empty($inputs['parent_id'])){
@@ -75,6 +70,13 @@ class Update extends Component
         // return back()->with(['message'=>'با موفقیت آپدیت شد']);
     }
 
+    public function updating($property, $value)
+    {
+        if($property=="parent_id"){
+            $this->parent_id = $value;
+        }
+        // Handle the value change
+    }
     public function render()
     {
         $product_cats=ProductCat::where('parent_id',null)->with('sub_cats')->get();

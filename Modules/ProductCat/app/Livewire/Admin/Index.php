@@ -2,20 +2,22 @@
 
 namespace Modules\ProductCat\Livewire\Admin;
 
+use App\Base\groupAction;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
 use Livewire\WithPagination;
 use Masmerise\Toaster\Toaster;
 use Modules\ProductCat\Models\ProductCat;
 use Ramsey\Uuid\Type\Integer;
 
-class Index extends Component
+class Index extends groupAction
 {
     use WithPagination,LivewireAlert;
 
+    private $models=ProductCat::class;
     public $product_cat;
+
     //search, check_all in pagination , multi orders (change state , change order)
 
     public $items = [];
@@ -27,9 +29,14 @@ class Index extends Component
             'confirmed'
         ];
     }
-
+    public function delete_all(){
+        foreach ($this->items as $value) {
+            ProductCat::where('id',$value)->delete();
+        }
+    }
     public function check_all(){
-        $this->items=$this->selectAll ? ProductCat::get('id')->pluck('id')->toArray(0)  : [];
+
+        $this->items=$this->selectAll ? $this->data()->pluck('id')->toArray()  : [];
     }
 
     public function updateTaskOrder($tasks)
@@ -38,11 +45,6 @@ class Index extends Component
             ProductCat::whereId($task['value'])->update(['order' => $task['order']]);
         }
     }
-
-    // public function scopSearch(Builder $builder, Model $model): void
-    // {
-        // $builder->where('created_at', '<', now()->subYears(2000));
-    // }
 
 
     public function confirmed()
@@ -67,9 +69,12 @@ class Index extends Component
             'onConfirmed' => 'confirmed',
         ]);
     }
+    public function data(){
+       return ProductCat::with('sub_cats')->filter(request()->all())->orderby('order','DESC')->paginate(10);
+    }
 
     public function render()
     {
-        return view('productcat::livewire.admin.index',['product_cats'=> ProductCat::filter($request->all())->where('parent_id',null)->with('sub_cats')->orderby('order','DESC')->paginate(10)]);
+        return view('productcat::livewire.admin.index',['product_cats'=> $this->data()]);
     }
 }
